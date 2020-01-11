@@ -1,4 +1,5 @@
-﻿using System;
+﻿using NeoDataLayer.DomainModel;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
@@ -13,6 +14,13 @@ namespace WebAukcija.Controllers
             ViewBag.Title = "Home Page";
 
             return View();
+        }
+
+        public ActionResult AuctionPortal()
+        {
+            ViewBag.Title = "Home Page";
+            User u = NeoDataLayer.Store.GetInstance().GetUser();
+            return View(u);
         }
     }
 }

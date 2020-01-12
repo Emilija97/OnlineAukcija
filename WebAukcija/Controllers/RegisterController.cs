@@ -15,6 +15,7 @@ namespace WebAukcija.Controllers
         }
 
         [HttpPost]
+        [AllowAnonymous]
         public ActionResult Index(NeoDataLayer.DomainModel.User u)
         {
             if(u.role)

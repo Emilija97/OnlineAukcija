@@ -19,11 +19,24 @@
                 @Html.ActionLink("Auction portal", "AuctionPortal", "Home", new { area = "" }, new { @class = "navbar-brand" })
             </div>
             <div class="navbar-collapse collapse">
-                <ul class="nav navbar-nav">
+                <ul class="mr-auto nav navbar-nav">
                     <li>@Html.ActionLink("Home", "Index", "Home", new { area = "" }, null)</li>
                     <li>@Html.ActionLink("Register", "Index", "Register", new { area = "" }, null)</li>
                     <li>@Html.ActionLink("Login", "Index", "Login", new { area = "" }, null)</li>
                     <li>@Html.ActionLink("Logout", "Logout", "Login", new { area = "" }, null)</li>
+                    @if (NeoDataLayer.Store.GetInstance().loggedUser != null)
+                    {
+                        if (NeoDataLayer.Store.GetInstance().loggedUser.role)
+                        {
+                            <li>@Html.ActionLink("Create auction", "Index", "Auction", new { area = "" }, null)</li>
+                            <li>@Html.ActionLink("Add subject on auction", "Subject", "Auction", new { area = "" }, null)</li>
+                        }
+                        else
+                        {
+                            <li>@Html.ActionLink("See auctions", "Auctions", "Auction", new { area = "" }, null)</li>
+                        }
+
+                    }
                 </ul>
             </div>
         </div>

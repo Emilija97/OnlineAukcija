@@ -1,0 +1,64 @@
+﻿@model IEnumerable<NeoDataLayer.DomainModel.Subject>
+
+@{
+    ViewBag.Title = "See Subjects";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2></h2>
+
+<table class="table">
+    <tr>
+        <th>
+            @Html.DisplayName("Name of subject")
+        </th>
+        <th>
+            @Html.DisplayName("Price starts from")
+        </th>
+        <th>
+            @Html.DisplayName("Current offer")
+        </th>
+        <th></th>
+    </tr>
+
+    @foreach (var item in Model)
+    {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.name)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.startingPrice)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.sellingPrice)
+            </td>
+            <td>
+                @using (Html.BeginForm())
+                {
+                    @Html.AntiForgeryToken()
+
+                    @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+
+                    <div style="display:flex;flex-direction:row">
+                        <div class="form-group">
+                            @Html.Editor("offerPrice", new { htmlAttributes = new { @class = "form-control" } })
+                            @Html.ValidationMessageFor(model => item.offerPrice)
+                        </div>
+                        <input style="visibility:hidden" type="text" value=@item.name name="itemName" />
+                        <div class="form-group">
+                            <div class="col-md-offset-2 col-md-10">
+                                <input type="submit" value="Offer new price" class="btn btn-default" />
+                            </div>
+                        </div>
+                    </div>
+                }
+            </td>
+        </tr>
+    }
+</table>
+
+<div>
+    @Html.ActionLink("Back to previous page", "Auctions", "Auction")
+</div>
+

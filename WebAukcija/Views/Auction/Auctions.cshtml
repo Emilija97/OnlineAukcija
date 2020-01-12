@@ -1,0 +1,52 @@
+﻿@model IEnumerable<NeoDataLayer.DomainModel.Auction>
+
+@{
+    ViewBag.Title = "Auctions";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>Active auctions:</h2>
+
+<table class="table">
+    <tr>
+        <th>
+            @Html.DisplayName("Name of auction")
+        </th>
+        <th>
+            @Html.DisplayName("Category/Type")
+        </th>
+        <th>
+            @Html.DisplayName("Auction starts from")
+        </th>
+        <th>
+            @Html.DisplayName("Auction ends")
+        </th>
+        <th></th>
+    </tr>
+
+    @foreach (var item in Model)
+    {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.title)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.type)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.datePublished)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.duration)
+            </td>
+            <td>
+                @Html.ActionLink("See subjects", "SeeSubjects", "Auction", new { title = item.title}, null)
+            </td>
+        </tr>
+    }
+</table>
+<div>
+    @Html.ActionLink("Add new subject", "Subject", "Auction")
+</div>
+
+

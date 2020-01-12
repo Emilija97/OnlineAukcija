@@ -22,10 +22,15 @@ namespace WebAukcija.Controllers
 
             if(temp)
             {
-                User user = NeoDataLayer.DataProvider.GetUser(u.email, u.password);
-                NeoDataLayer.Store.GetInstance().SetUser(user);
-                return Redirect("~/Home");
+                User user = NeoDataLayer.DataProvider.GetUser(u.email, u.password, u.role);
+                if (user != null)
+                {
+                    user.role = u.role;
+                    NeoDataLayer.Store.GetInstance().SetUser(user);
+                    return Redirect("~/Home");
+                }
             }
+            ViewBag.Message = "Your email, password or role is incorrect!";
             return View();
         }
 

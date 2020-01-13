@@ -1,0 +1,51 @@
+﻿@model IEnumerable<NeoDataLayer.DomainModel.Subject>
+@{
+    ViewBag.Title = "LicitatedItems";
+}
+
+<h2>Licitated Items</h2>
+
+<table class="table">
+    <tr>
+        <th>
+            @Html.DisplayName("Name of auction")
+        </th>
+        <th>
+            @Html.DisplayName("Name of subject")
+        </th>
+        <th>
+            @Html.DisplayName("Price started from")
+        </th>
+        <th>
+            @Html.DisplayName("Current maximum offer")
+        </th>
+        <th>
+            @Html.DisplayName("Your offer")
+        </th>
+    </tr>
+
+    @foreach (var item in Model)
+    {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.auctionName)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.name)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.startingPrice)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.sellingPrice)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.offerPrice)
+            </td>
+        </tr>
+    }
+</table>
+<div>
+    @Html.ActionLink("Back to previous page", "AuctionPortal", "Home")
+</div>
+

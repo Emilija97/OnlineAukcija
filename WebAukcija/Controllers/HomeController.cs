@@ -19,8 +19,27 @@ namespace WebAukcija.Controllers
         public ActionResult AuctionPortal()
         {
             ViewBag.Title = "Home Page";
-            User u = NeoDataLayer.Store.GetInstance().GetUser();
-            return View(u);
+            List<Auction> auctions = NeoDataLayer.DataProvider.GetAllOrganizatorAuctions();
+            return View(auctions);
+        }
+
+        public ActionResult MakePurchase(string title)
+        {
+            NeoDataLayer.DataProvider.MakePurchase(title);
+            List<Auction> auctions = NeoDataLayer.DataProvider.GetAllOrganizatorAuctions();
+            return View(auctions);
+        }
+
+        public ActionResult Purchases()
+        {
+            List<Subject> subjects = NeoDataLayer.DataProvider.GetAllPurchases(NeoDataLayer.Store.GetInstance().loggedUser);
+            return View(subjects);
+        }
+
+        public ActionResult LicitatedItems()
+        {
+            List<Subject> subjects = NeoDataLayer.DataProvider.GetAllLicitatedSubjects(NeoDataLayer.Store.GetInstance().loggedUser);
+            return View(subjects);
         }
     }
 }

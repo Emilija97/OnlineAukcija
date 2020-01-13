@@ -223,6 +223,9 @@
     <Content Include="Views\Auction\Auctions.cshtml" />
     <Content Include="Views\Auction\SeeSubjects.cshtml" />
     <Content Include="Views\Auction\Subject.cshtml" />
+    <Content Include="Views\Home\MakePurchase.cshtml" />
+    <Content Include="Views\Home\LicitatedItems.cshtml" />
+    <Content Include="Views\Home\Purchases.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

@@ -37,7 +37,8 @@ namespace WebAukcija.Controllers
         [HttpPost]
         public ActionResult SeeSubjects(int offerPrice,string itemName, string title)
         {
-            bool tmp = NeoDataLayer.DataProvider.OfferPrice(title, itemName, offerPrice);
+            User user = NeoDataLayer.Store.GetInstance().GetUser();
+            bool tmp = NeoDataLayer.DataProvider.OfferPrice(title, itemName, offerPrice, user);
             List<Subject> subjects = NeoDataLayer.DataProvider.GetAllSubjects(title);
             return View(subjects);
         }

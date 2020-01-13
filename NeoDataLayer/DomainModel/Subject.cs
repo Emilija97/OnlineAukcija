@@ -16,5 +16,7 @@ namespace NeoDataLayer.DomainModel
         [Required(ErrorMessage = "Starting price is required.")]
         public int startingPrice { get; set; }
         public int offerPrice { get; set; }
+
+        public string auctionName { get; set; }
     }
 }

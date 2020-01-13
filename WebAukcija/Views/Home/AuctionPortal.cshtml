@@ -1,11 +1,61 @@
-﻿@model NeoDataLayer.DomainModel.User
+﻿@model IEnumerable<NeoDataLayer.DomainModel.Auction>
 
-<div class="container">
-    <div>
-        <h1>Welcome to the auction portal   @Html.DisplayFor(modelItem => Model.name)</h1>
+    <div class="container">
+        @if (NeoDataLayer.Store.GetInstance().loggedUser != null)
+        {
+            <div>
+                <h1>@NeoDataLayer.Store.GetInstance().loggedUser.name, welcome to the auction portal</h1>
+            </div>
+            if (NeoDataLayer.Store.GetInstance().loggedUser.role)
+            {
+                <table class="table">
+                    <tr>
+                        <th>
+                            @Html.DisplayName("Name of auction")
+                        </th>
+                        <th>
+                            @Html.DisplayName("Category/Type")
+                        </th>
+                        <th>
+                            @Html.DisplayName("Auction starts from")
+                        </th>
+                        <th>
+                            @Html.DisplayName("Auction ends")
+                        </th>
+                        <th></th>
+                    </tr>
+
+                    @foreach (var item in Model)
+                    {
+                        <tr>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.title)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.type)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.datePublished)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.duration)
+                            </td>
+                            <td>
+                                @Html.ActionLink("Make Purchase", "MakePurchase", "Home", new { title = item.title }, null)
+                            </td>
+                        </tr>
+                    }
+                </table>
+            }
+            else
+            {
+                <div>
+                    @Html.ActionLink("See all licitated items", "LicitatedItems", "Home", new { area = "" }, null)
+                </div>
+                <div>
+                    @Html.ActionLink("See all purchases", "Purchases", "Home", new { area = "" }, null)
+                </div>
+            }
+        }
     </div>
-    <form>
-        <h3>You can log in like an user or an organizer.</h3>
-    </form>
-</div>
 

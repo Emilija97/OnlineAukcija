@@ -58,6 +58,7 @@
   <ItemGroup>
     <Compile Include="DataProvider.cs" />
     <Compile Include="DomainModel\Auction.cs" />
+    <Compile Include="DomainModel\Relation.cs" />
     <Compile Include="DomainModel\Subject.cs" />
     <Compile Include="DomainModel\User.cs" />
     <Compile Include="GraphClientManager.cs" />

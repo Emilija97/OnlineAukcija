@@ -377,7 +377,8 @@ namespace NeoDataLayer
             }
             catch (Exception)
             {
-                throw new NotImplementedException();
+                //throw new NotImplementedException();
+                return;
             }
         }
         #endregion
@@ -410,7 +411,8 @@ namespace NeoDataLayer
             }
             catch (Exception)
             {
-                throw new NotImplementedException();
+                //throw new NotImplementedException();
+                return new List<Subject>();
             }
         }
 

@@ -217,7 +217,7 @@ namespace NeoDataLayer
             try
             {
                 var query = new Neo4jClient.Cypher.CypherQuery("MATCH (n)<-[r: ON_AUCTION]-(a) where exists (n.title) " +
-                                                                    "and n.title='" + title + "' detach delete n",
+                                                                    "and n.title='" + title + "' detach delete n,a",
                                                                     new Dictionary<string, object>(), CypherResultMode.Set);
 
                 ((IRawGraphClient)graphClient).ExecuteCypher(query);
@@ -295,8 +295,10 @@ namespace NeoDataLayer
 
             try
             {
-                var query = new Neo4jClient.Cypher.CypherQuery("start n=node(*) MATCH (n:Auction) WHERE EXISTS(n.type) AND " +
-                                                               "n.type =~'.*" + type + ".*' RETURN n",
+                string currentDate = DateTime.Now.ToString("yyyy-MM-dd");
+                var query = new Neo4jClient.Cypher.CypherQuery("MATCH (n:Auction) WHERE " +
+                                                               "n.duration > date('" + currentDate + "') " +
+                                                               "AND n.type=~'.*" + type + ".*' RETURN n",
                                                                 new Dictionary<string, object>(), CypherResultMode.Set);
 
                 List<Auction> auctions = ((IRawGraphClient)graphClient).ExecuteGetCypherResults<Auction>(query).ToList();

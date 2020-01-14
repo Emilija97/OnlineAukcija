@@ -16,7 +16,7 @@ namespace NeoDataLayer
         {
             if (client == null)
             {
-                client = new GraphClient(new Uri("http://localhost:7474/db/data"), "neo4j", "asd");
+                client = new GraphClient(new Uri("http://localhost:7474/db/data"), "neo4j", "admin");
                 try
                 {
                     client.Connect();

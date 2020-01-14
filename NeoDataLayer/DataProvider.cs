@@ -16,7 +16,7 @@ namespace NeoDataLayer
         public static User GetUser(string email, string password, bool role)
         {
             IGraphClient graphClient = GraphClientManager.GetGraphClient();
-         
+
             if (graphClient == null)
                 return null;
 
@@ -37,20 +37,20 @@ namespace NeoDataLayer
                                                                   "and n.password = '" + password + "' return n",
                                                                     new Dictionary<string, object>(), CypherResultMode.Set);
                 }
-                    List<User> users = ((IRawGraphClient)graphClient).ExecuteGetCypherResults<User>(query).ToList();
+                List<User> users = ((IRawGraphClient)graphClient).ExecuteGetCypherResults<User>(query).ToList();
 
-                    User user = new User();
-                    if (users != null)
-                    {
-                        user.name = users[0].name;
-                        user.email = users[0].email;
-                        user.password = users[0].password;
-                        return user;
-                    }
-                    else
-                    {
-                        return null;
-                    }
+                User user = new User();
+                if (users != null)
+                {
+                    user.name = users[0].name;
+                    user.email = users[0].email;
+                    user.password = users[0].password;
+                    return user;
+                }
+                else
+                {
+                    return null;
+                }
             }
             catch (Exception)
             {
@@ -82,7 +82,7 @@ namespace NeoDataLayer
 
                 List<User> users = ((IRawGraphClient)graphClient).ExecuteGetCypherResults<User>(query).ToList();
             }
-            catch(Exception e)
+            catch (Exception e)
             {
                 return;
             }
@@ -110,7 +110,7 @@ namespace NeoDataLayer
                                                             + "'}) return n",
                                                             queryDict, CypherResultMode.Set);
 
-            List<User> users = ((IRawGraphClient)graphClient).ExecuteGetCypherResults<User>(query).ToList();
+                List<User> users = ((IRawGraphClient)graphClient).ExecuteGetCypherResults<User>(query).ToList();
             }
             catch (Exception e)
             {
@@ -148,7 +148,7 @@ namespace NeoDataLayer
                     return false;
                 }
             }
-            catch(Exception)
+            catch (Exception)
             {
                 return false;
             }
@@ -157,12 +157,12 @@ namespace NeoDataLayer
 
         #region Auction
 
-        public static void CreateAuction(Auction auction)
+        public static bool CreateAuction(Auction auction)
         {
             IGraphClient graphClient = GraphClientManager.GetGraphClient();
 
             if (graphClient == null)
-                return;
+                return false;
 
             Dictionary<string, object> queryDict = new Dictionary<string, object>();
             string d = "";
@@ -176,7 +176,7 @@ namespace NeoDataLayer
             queryDict.Add("datePublished", d);
             queryDict.Add("duration", duration);
 
-            
+
             User user = NeoDataLayer.Store.GetInstance().loggedUser;
 
             try
@@ -189,20 +189,43 @@ namespace NeoDataLayer
                                                             queryDict, CypherResultMode.Set);
 
                 List<Auction> auctions = ((IRawGraphClient)graphClient).ExecuteGetCypherResults<Auction>(query).ToList();
-          
+
 
                 var queryAddRel = new Neo4jClient.Cypher.CypherQuery("MATCH (n:Organizer),(a:Auction) WHERE " +
-                                                                    "n.name = '"+user.name+ "' AND " +
-                                                                    "n.email = '"+user.email+"' AND " +
-                                                                    "a.title = '"+auction.title+"' " +
+                                                                    "n.name = '" + user.name + "' AND " +
+                                                                    "n.email = '" + user.email + "' AND " +
+                                                                    "a.title = '" + auction.title + "' " +
                                                                     "CREATE(n) -[r: ORGANIZE]->(a) RETURN n",
                                                                     new Dictionary<string, object>(), CypherResultMode.Set);
 
                 List<User> users = ((IRawGraphClient)graphClient).ExecuteGetCypherResults<User>(queryAddRel).ToList();
+                return true;
             }
             catch (Exception)
             {
-                throw new NotImplementedException();
+                //throw new NotImplementedException();
+                return false;
+            }
+        }
+        public static void DeleteAuction(string title)
+        {
+            IGraphClient graphClient = GraphClientManager.GetGraphClient();
+
+            if (graphClient == null)
+                return;
+
+            try
+            {
+                var query = new Neo4jClient.Cypher.CypherQuery("MATCH (n)<-[r: ON_AUCTION]-(a) where exists (n.title) " +
+                                                                    "and n.title='" + title + "' detach delete n",
+                                                                    new Dictionary<string, object>(), CypherResultMode.Set);
+
+                ((IRawGraphClient)graphClient).ExecuteCypher(query);
+
+            }
+            catch (Exception)
+            {
+                return;
             }
         }
 
@@ -245,11 +268,39 @@ namespace NeoDataLayer
             {
                 string currentDate = DateTime.Now.ToString("yyyy-MM-dd");
                 var query = new Neo4jClient.Cypher.CypherQuery("MATCH (n:Auction) WHERE " +
-                                                               "n.duration > date('" +currentDate +"') RETURN n",
+                                                               "n.duration > date('" + currentDate + "') RETURN n",
                                                                 new Dictionary<string, object>(), CypherResultMode.Set);
 
                 List<Auction> auctions = ((IRawGraphClient)graphClient).ExecuteGetCypherResults<Auction>(query).ToList();
-                if(auctions != null)
+                if (auctions != null)
+                {
+                    return auctions;
+                }
+                return null;
+            }
+            catch (Exception)
+            {
+                throw new NotImplementedException();
+            }
+        }
+
+        public static List<Auction> GetAuctionsByType(string type)
+        {
+            IGraphClient graphClient = GraphClientManager.GetGraphClient();
+
+            if (graphClient == null)
+                return null;
+
+            User user = NeoDataLayer.Store.GetInstance().loggedUser;
+
+            try
+            {
+                var query = new Neo4jClient.Cypher.CypherQuery("start n=node(*) MATCH (n:Auction) WHERE EXISTS(n.type) AND " +
+                                                               "n.type =~'.*" + type + ".*' RETURN n",
+                                                                new Dictionary<string, object>(), CypherResultMode.Set);
+
+                List<Auction> auctions = ((IRawGraphClient)graphClient).ExecuteGetCypherResults<Auction>(query).ToList();
+                if (auctions.Count != 0)
                 {
                     return auctions;
                 }
@@ -300,16 +351,16 @@ namespace NeoDataLayer
             try
             {
                 List<Subject> subjects = GetAllSubjects(title);
-                if(subjects != null)
+                if (subjects.Count != 0)
                 {
-                    foreach(Subject subject in subjects)
+                    foreach (Subject subject in subjects)
                     {
                         var query = new Neo4jClient.Cypher.CypherQuery("MATCH (u:User)-[k:LICITATE]->(s)" +
                                                                        " WHERE s.name='" + subject.name + "' " +
                                                                        "RETURN max(k.price)",
                                                                         new Dictionary<string, object>(), CypherResultMode.Set);
 
-                       int price = ((IRawGraphClient)graphClient).ExecuteGetCypherResults<int>(query).FirstOrDefault();
+                        int price = ((IRawGraphClient)graphClient).ExecuteGetCypherResults<int>(query).FirstOrDefault();
 
                         var queryBought = new Neo4jClient.Cypher.CypherQuery("MATCH (u:User)-[k:LICITATE{price:" + price + "}]->(s) " +
                                                                             "WHERE s.name ='" + subject.name + "'" +
@@ -345,7 +396,7 @@ namespace NeoDataLayer
             try
             {
                 var query = new Neo4jClient.Cypher.CypherQuery("start n=node(*) MATCH (n)<-[r:ON_AUCTION]-(a) " +
-                                                               "WHERE EXISTS(n.title) and n.title ='"+title+"' RETURN a",
+                                                               "WHERE EXISTS(n.title) and n.title ='" + title + "' RETURN a",
                                                                 queryDict, CypherResultMode.Set);
 
                 List<Subject> subjects = ((IRawGraphClient)graphClient).ExecuteGetCypherResults<Subject>(query).ToList();
@@ -375,29 +426,29 @@ namespace NeoDataLayer
             try
             {
                 var query = new Neo4jClient.Cypher.CypherQuery("start n=node(*) MATCH (n)<-[r:ON_AUCTION]-(a) " +
-                                                               "WHERE EXISTS(n.title) and n.title ='" + title + "' and a.name ='"+subjectName+"' RETURN a",
+                                                               "WHERE EXISTS(n.title) and n.title ='" + title + "' and a.name ='" + subjectName + "' RETURN a",
                                                                 queryDict, CypherResultMode.Set);
 
                 List<Subject> subjects = ((IRawGraphClient)graphClient).ExecuteGetCypherResults<Subject>(query).ToList();
                 Subject subject = new Subject();
-                if (subjects != null)
+                if (subjects.Count != 0)
                 {
                     subject.sellingPrice = subjects[0].sellingPrice;
                     subject.startingPrice = subjects[0].startingPrice;
 
-                    if(price>subject.startingPrice && price > subject.sellingPrice)
+                    if (price > subject.startingPrice && price > subject.sellingPrice)
                     {
                         var queryUpdate = new Neo4jClient.Cypher.CypherQuery("MATCH (n:Auction), (s:Subject), (u:User), (n)<-[r:ON_AUCTION]-(s) " +
                                                                              "WHERE EXISTS(n.title) AND n.title='" + title + "' " +
                                                                              "AND s.name='" + subjectName + "' " +
                                                                              "AND u.email='" + user.email + "' " +
                                                                              "MERGE (u)-[k:LICITATE]->(s) " +
-                                                                             "ON CREATE SET k.price="+price+ " " +
+                                                                             "ON CREATE SET k.price=" + price + " " +
                                                                              "ON MATCH SET k.price=" + price + " " +
                                                                              "SET s.sellingPrice=" + price + " RETURN n",
                                                                             new Dictionary<string, object>(), CypherResultMode.Set);
                         List<Subject> subjectsData = ((IRawGraphClient)graphClient).ExecuteGetCypherResults<Subject>(queryUpdate).ToList();
-                        if(subjectsData != null)
+                        if (subjectsData != null)
                         {
                             return true;
                         }
@@ -425,28 +476,41 @@ namespace NeoDataLayer
             queryDict.Add("title", title);
             queryDict.Add("name", s.name);
             queryDict.Add("startingPrice", s.startingPrice);
+            queryDict.Add("description", s.description);
 
             try
             {
-                var query = new Neo4jClient.Cypher.CypherQuery("CREATE (n:Subject {name:'" + s.name
+                CypherQuery checker = new Neo4jClient.Cypher.CypherQuery("start n=node(*) MATCH (n)-[r:ORGANIZE]->(a) " +
+                                                                         "WHERE EXISTS(a.title) AND n.email='" + user.email + "' " +
+                                                                         "AND a.title='" + title + "' RETURN a",
+                                                                          new Dictionary<string, object>(), CypherResultMode.Set);
+
+                List<Auction> aucts = ((IRawGraphClient)graphClient).ExecuteGetCypherResults<Auction>(checker).ToList();
+
+                if (aucts.Count != 0)
+                {
+                    var query = new Neo4jClient.Cypher.CypherQuery("CREATE (n:Subject {name:'" + s.name
                                                            + "', sellingPrice: 0"
                                                            + ", startingPrice:" + s.startingPrice
-                                                           + "}) RETURN n",
+                                                           + ", description:'" + s.description + "'}) RETURN n",
                                                            queryDict, CypherResultMode.Set);
 
-                List<Auction> auctions = ((IRawGraphClient)graphClient).ExecuteGetCypherResults<Auction>(query).ToList();
+                    List<Auction> auctions = ((IRawGraphClient)graphClient).ExecuteGetCypherResults<Auction>(query).ToList();
 
 
-                var queryAddRel = new Neo4jClient.Cypher.CypherQuery("MATCH (n:Auction),(s:Subject),(o:Organizer) WHERE " +
-                                                                    "n.title = '" + title + "' AND " +
-                                                                    "s.name = '" + s.name + "' AND " +
-                                                                    "o.email= '" + user.email +"' " +
-                                                                    "CREATE (o)-[r:POST_ON_AUCTION]->(s)" +
-                                                                    "CREATE (s)-[k: ON_AUCTION]->(n) RETURN n",
-                                                                    new Dictionary<string, object>(), CypherResultMode.Set);
+                    var queryAddRel = new Neo4jClient.Cypher.CypherQuery("MATCH (n:Auction),(s:Subject),(o:Organizer) WHERE " +
+                                                                        "n.title = '" + title + "' AND " +
+                                                                        "s.name = '" + s.name + "' AND " +
+                                                                        "o.email= '" + user.email + "' " +
+                                                                        "CREATE (o)-[r:POST_ON_AUCTION]->(s)" +
+                                                                        "CREATE (s)-[k: ON_AUCTION]->(n) RETURN n",
+                                                                        new Dictionary<string, object>(), CypherResultMode.Set);
 
-                List<Auction> auctionsData = ((IRawGraphClient)graphClient).ExecuteGetCypherResults<Auction>(queryAddRel).ToList();
-                return true;
+                    List<Auction> auctionsData = ((IRawGraphClient)graphClient).ExecuteGetCypherResults<Auction>(queryAddRel).ToList();
+                    return true;
+                }
+                else
+                    return false;
             }
             catch (Exception)
             {
@@ -469,11 +533,11 @@ namespace NeoDataLayer
             try
             {
                 var query = new Neo4jClient.Cypher.CypherQuery("start n=node(*) MATCH (n)-[r:BOUGHT]->(s) " +
-                                                               "WHERE n.email='"+loggedUser.email+"' RETURN s",
+                                                               "WHERE n.email='" + loggedUser.email + "' RETURN s",
                                                                 queryDict, CypherResultMode.Set);
 
                 List<Subject> subjects = ((IRawGraphClient)graphClient).ExecuteGetCypherResults<Subject>(query).ToList();
-                if (subjects != null)
+                if (subjects.Count != 0)
                 {
                     foreach (var sub in subjects)
                     {
@@ -512,9 +576,9 @@ namespace NeoDataLayer
                                                                 queryDict, CypherResultMode.Set);
 
                 List<Subject> subjects = ((IRawGraphClient)graphClient).ExecuteGetCypherResults<Subject>(query).ToList();
-                if (subjects != null)
+                if (subjects.Count != 0)
                 {
-                    foreach(var sub in subjects)
+                    foreach (var sub in subjects)
                     {
                         var queryAuction = new Neo4jClient.Cypher.CypherQuery("start n=node(*) MATCH (n)<-[r:ON_AUCTION]-(a) " +
                                                                               "WHERE a.name ='" + sub.name + "' RETURN n",
@@ -522,7 +586,7 @@ namespace NeoDataLayer
                         Auction auction = ((IRawGraphClient)graphClient).ExecuteGetCypherResults<Auction>(queryAuction).FirstOrDefault();
 
                         var queryOffer = new Neo4jClient.Cypher.CypherQuery("start n=node(*) MATCH (n)-[r:LICITATE]-(a) " +
-                                                                             "WHERE n.email = '"+loggedUser.email+"' " +
+                                                                             "WHERE n.email = '" + loggedUser.email + "' " +
                                                                              "AND a.name ='" + sub.name + "' RETURN r.price",
                                                                               queryDict, CypherResultMode.Set);
                         int offer = ((IRawGraphClient)graphClient).ExecuteGetCypherResults<int>(queryOffer).FirstOrDefault();

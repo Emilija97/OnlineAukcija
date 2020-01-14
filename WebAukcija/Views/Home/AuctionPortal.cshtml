@@ -1,61 +1,70 @@
 ﻿@model IEnumerable<NeoDataLayer.DomainModel.Auction>
 
-    <div class="container">
-        @if (NeoDataLayer.Store.GetInstance().loggedUser != null)
+<div class="container">
+    @if (NeoDataLayer.Store.GetInstance().loggedUser != null)
+    {
+        <div>
+            <h1>@NeoDataLayer.Store.GetInstance().loggedUser.name, welcome to the auction portal</h1>
+        </div>
+        if (NeoDataLayer.Store.GetInstance().loggedUser.role)
+        {
+            <table class="table">
+                <tr>
+                    <th>
+                        @Html.DisplayName("Name of auction")
+                    </th>
+                    <th>
+                        @Html.DisplayName("Category/Type")
+                    </th>
+                    <th>
+                        @Html.DisplayName("Auction starts from")
+                    </th>
+                    <th>
+                        @Html.DisplayName("Auction ends")
+                    </th>
+                    <th>
+                        @Html.DisplayName("Purchase")
+                    </th>
+                    <th>
+                        @Html.DisplayName("Delete")
+                    </th>
+                    <th></th>
+                </tr>
+
+                @foreach (var item in Model)
+                {
+                    <tr>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.title)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.type)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.datePublished)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.duration)
+                        </td>
+                        <td>
+                            @Html.ActionLink("Make Purchase", "MakePurchase", "Home", new { title = item.title }, null)
+                        </td>
+                        <td>
+                            @Html.ActionLink("Delete auction", "DeleteAuction", "Auction", new { title = item.title }, null)
+                        </td>
+                    </tr>
+                }
+            </table>
+        }
+        else
         {
             <div>
-                <h1>@NeoDataLayer.Store.GetInstance().loggedUser.name, welcome to the auction portal</h1>
+                <h2> @Html.ActionLink("See all licitated items", "LicitatedItems", "Home", new { area = "" }, null)</h2>
             </div>
-            if (NeoDataLayer.Store.GetInstance().loggedUser.role)
-            {
-                <table class="table">
-                    <tr>
-                        <th>
-                            @Html.DisplayName("Name of auction")
-                        </th>
-                        <th>
-                            @Html.DisplayName("Category/Type")
-                        </th>
-                        <th>
-                            @Html.DisplayName("Auction starts from")
-                        </th>
-                        <th>
-                            @Html.DisplayName("Auction ends")
-                        </th>
-                        <th></th>
-                    </tr>
-
-                    @foreach (var item in Model)
-                    {
-                        <tr>
-                            <td>
-                                @Html.DisplayFor(modelItem => item.title)
-                            </td>
-                            <td>
-                                @Html.DisplayFor(modelItem => item.type)
-                            </td>
-                            <td>
-                                @Html.DisplayFor(modelItem => item.datePublished)
-                            </td>
-                            <td>
-                                @Html.DisplayFor(modelItem => item.duration)
-                            </td>
-                            <td>
-                                @Html.ActionLink("Make Purchase", "MakePurchase", "Home", new { title = item.title }, null)
-                            </td>
-                        </tr>
-                    }
-                </table>
-            }
-            else
-            {
-                <div>
-                    @Html.ActionLink("See all licitated items", "LicitatedItems", "Home", new { area = "" }, null)
-                </div>
-                <div>
-                    @Html.ActionLink("See all purchases", "Purchases", "Home", new { area = "" }, null)
-                </div>
-            }
+            <div>
+                <h2> @Html.ActionLink("See all purchases", "Purchases", "Home", new { area = "" }, null)</h2>
+            </div>
         }
-    </div>
+    }
+</div>
 

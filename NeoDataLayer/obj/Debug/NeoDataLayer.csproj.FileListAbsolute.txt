@@ -12,3 +12,17 @@ C:\Users\Emilija\source\repos\WebAukcija\NeoDataLayer\obj\Debug\NeoDataLayer.csp
 C:\Users\Emilija\source\repos\WebAukcija\NeoDataLayer\obj\Debug\NeoDataLayer.csproj.CopyComplete
 C:\Users\Emilija\source\repos\WebAukcija\NeoDataLayer\obj\Debug\NeoDataLayer.dll
 C:\Users\Emilija\source\repos\WebAukcija\NeoDataLayer\obj\Debug\NeoDataLayer.pdb
+C:\Users\ilija\Desktop\NeoWeb\NeoDataLayer\bin\Debug\NeoDataLayer.dll.config
+C:\Users\ilija\Desktop\NeoWeb\NeoDataLayer\bin\Debug\NeoDataLayer.dll
+C:\Users\ilija\Desktop\NeoWeb\NeoDataLayer\bin\Debug\NeoDataLayer.pdb
+C:\Users\ilija\Desktop\NeoWeb\NeoDataLayer\bin\Debug\Neo4j.Driver.dll
+C:\Users\ilija\Desktop\NeoWeb\NeoDataLayer\bin\Debug\Neo4jClient.dll
+C:\Users\ilija\Desktop\NeoWeb\NeoDataLayer\bin\Debug\Newtonsoft.Json.dll
+C:\Users\ilija\Desktop\NeoWeb\NeoDataLayer\bin\Debug\Neo4j.Driver.xml
+C:\Users\ilija\Desktop\NeoWeb\NeoDataLayer\bin\Debug\Neo4jClient.pdb
+C:\Users\ilija\Desktop\NeoWeb\NeoDataLayer\bin\Debug\Neo4jClient.xml
+C:\Users\ilija\Desktop\NeoWeb\NeoDataLayer\bin\Debug\Newtonsoft.Json.xml
+C:\Users\ilija\Desktop\NeoWeb\NeoDataLayer\obj\Debug\NeoDataLayer.csprojAssemblyReference.cache
+C:\Users\ilija\Desktop\NeoWeb\NeoDataLayer\obj\Debug\NeoDataLayer.csproj.CopyComplete
+C:\Users\ilija\Desktop\NeoWeb\NeoDataLayer\obj\Debug\NeoDataLayer.dll
+C:\Users\ilija\Desktop\NeoWeb\NeoDataLayer\obj\Debug\NeoDataLayer.pdb

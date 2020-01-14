@@ -16,8 +16,11 @@
                     <span class="icon-bar"></span>
                     <span class="icon-bar"></span>
                 </button>
-                @Html.ActionLink("Auction portal", "AuctionPortal", "Home", new { area = "" }, new { @class = "navbar-brand" })
-            </div>
+                @if (NeoDataLayer.Store.GetInstance().loggedUser != null)
+                {
+                    @Html.ActionLink("Auction portal", "AuctionPortal", "Home", new { area = "" }, new { @class = "navbar-brand" })
+                }
+                </div>
             <div class="navbar-collapse collapse">
                 <ul class="mr-auto nav navbar-nav">
                     <li>@Html.ActionLink("Home", "Index", "Home", new { area = "" }, null)</li>
@@ -44,9 +47,6 @@
     <div class="container body-content">
         @RenderBody()
         <hr />
-        <footer>
-            <p>&copy; @DateTime.Now.Year - My ASP.NET Application</p>
-        </footer>
     </div>
 
     @Scripts.Render("~/bundles/jquery")

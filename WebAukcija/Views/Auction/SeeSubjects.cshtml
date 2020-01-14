@@ -18,6 +18,9 @@
         <th>
             @Html.DisplayName("Current offer")
         </th>
+        <th>
+            @Html.DisplayName("Subject description")
+        </th>
         <th></th>
     </tr>
 
@@ -32,6 +35,9 @@
             </td>
             <td>
                 @Html.DisplayFor(modelItem => item.sellingPrice)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.description)
             </td>
             <td>
                 @using (Html.BeginForm())

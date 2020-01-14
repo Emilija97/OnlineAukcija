@@ -4,12 +4,10 @@
     ViewBag.Title = "Index";
 }
 
-<h2>Index</h2>
-
-@using (Html.BeginForm()) 
+@using (Html.BeginForm())
 {
     @Html.AntiForgeryToken()
-    
+
     <div class="form-horizontal">
         <h4>Auction</h4>
         <hr />
@@ -46,6 +44,8 @@
             </div>
         </div>
 
+        <h4 class="alert-success">@ViewBag.Message</h4>
+        <h4 class="alert-danger">@ViewBag.Alert</h4>
         <div class="form-group">
             <div class="col-md-offset-2 col-md-10">
                 <input type="submit" value="Create Auction" class="btn btn-default" />
@@ -54,6 +54,3 @@
     </div>
 }
 
-<div>
-    @Html.ActionLink("Back to List", "Index")
-</div>

@@ -18,13 +18,24 @@ namespace WebAukcija.Controllers
         [HttpPost]
         public ActionResult Index(NeoDataLayer.DomainModel.Auction auction)
         {
-            NeoDataLayer.DataProvider.CreateAuction(auction);
+            bool tmp = NeoDataLayer.DataProvider.CreateAuction(auction);
+            if (tmp)
+                ViewBag.Message = "You successfully added new auction!";
+            else
+                ViewBag.Alert = "Lost connection with database!";
             return View();
         }
 
         public ActionResult Auctions()
         {
-            List<Auction> auctions= NeoDataLayer.DataProvider.GetAllAuctions();
+            List<Auction> auctions = NeoDataLayer.DataProvider.GetAllAuctions();
+            return View(auctions);
+        }
+
+        [HttpPost]
+        public ActionResult Auctions(string type)
+        {
+            List<Auction> auctions = NeoDataLayer.DataProvider.GetAuctionsByType(type);
             return View(auctions);
         }
 
@@ -35,7 +46,7 @@ namespace WebAukcija.Controllers
         }
 
         [HttpPost]
-        public ActionResult SeeSubjects(int offerPrice,string itemName, string title)
+        public ActionResult SeeSubjects(int offerPrice, string itemName, string title)
         {
             User user = NeoDataLayer.Store.GetInstance().GetUser();
             bool tmp = NeoDataLayer.DataProvider.OfferPrice(title, itemName, offerPrice, user);
@@ -53,9 +64,17 @@ namespace WebAukcija.Controllers
         {
             User user = NeoDataLayer.Store.GetInstance().GetUser();
             bool tmp = NeoDataLayer.DataProvider.AddSubject(title, s, user);
-            if(tmp)
+            if (tmp)
                 ViewBag.Message = "You successfully added new subject on your auction!";
+            else
+                ViewBag.Alert = "You enter wrong name for auction!";
             return View();
+        }
+
+        public ActionResult DeleteAuction(string title)
+        {
+            NeoDataLayer.DataProvider.DeleteAuction(title);
+            return Redirect("Index");
         }
     }
 }

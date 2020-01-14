@@ -17,6 +17,9 @@
             @Html.DisplayName("Price started from")
         </th>
         <th>
+            @Html.DisplayName("Subject description")
+        </th>
+        <th>
             @Html.DisplayName("Current maximum offer")
         </th>
         <th>
@@ -35,6 +38,9 @@
             </td>
             <td>
                 @Html.DisplayFor(modelItem => item.startingPrice)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.description)
             </td>
             <td>
                 @Html.DisplayFor(modelItem => item.sellingPrice)
